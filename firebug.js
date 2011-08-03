@@ -5,22 +5,33 @@
  * Based on plugin firebug for vimperator
  */
 
-var app = dactyl.plugins.app;
-app.console.log(Firebug.chrome.$('fbCommandEditorBox'));
-
 var FirebugPentadactyl = function () {
 	var fbContentBox = document.getElementById('fbContentBox'),
 	fb = Firebug,
 	fbCommandLine = fb.CommandLine;
 	return {
+		_initialize: function () {
+			var self = this;
+			if (!this.initialized) {
+				document.getElementById('fbCommandEditor').addEventListener('blur', function (event) {
+					self.console_run();
+				},
+				true);
+				this.initialized = true;
+			}
+			return this;
+		},
 		_exec: function (args) {
 			var self = this;
 			args.forEach(function (cmd) {
 				self[cmd.replace('-', '_')]();
 			});
 		},
+		initialized: false,
 		open: function () {
-			fb.showBar('console');
+			if (fbContentBox.collapsed) {
+				fb.toggleBar(true, 'console');
+			}
 			setTimeout(function () {
 				var browser = fb.chrome.getCurrentBrowser();
 				browser.chrome.getSelectedPanel().document.defaultView.focus();
@@ -65,9 +76,9 @@ var FirebugPentadactyl = function () {
 	};
 };
 
-fbp = new FirebugPentadactyl();
+var fbp = (new FirebugPentadactyl())._initialize();
 
-group.commands.add(['firebug'], 'Control firebug from within pentadactyl.', function (args) {
+group.commands.add(['firebug', 'fbp'], 'Control firebug from within pentadactyl.', function (args) {
 	fbp._exec(args);
 },
 {
