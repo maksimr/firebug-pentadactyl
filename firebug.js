@@ -6,30 +6,29 @@
  */
 
 var FirebugPentadactyl = function () {
-	var fbContentBox = document.getElementById('fbContentBox'),
-	fb = Firebug,
+	var fb = Firebug,
 	fbCommandLine = fb.CommandLine;
 	return {
 		_initialize: function () {
 			var self = this;
-			if (!this.initialized) {
+			if (!this._initialized) {
 				document.getElementById('fbCommandEditor').addEventListener('blur', function (event) {
 					self.console_run();
 				},
 				true);
-				this.initialized = true;
+				this._initialized = true;
 			}
 			return this;
 		},
-		_exec: function (args) {
+		_exec: function (args, query) {
 			var self = this;
 			args.forEach(function (cmd) {
-				self[cmd.replace('-', '_')]();
+				self[cmd.replace('-', '_')](query);
 			});
 		},
-		initialized: false,
+		_initialized: false,
 		open: function () {
-			if (fbContentBox.collapsed) {
+			if (!fb.chrome.isOpen()) {
 				fb.toggleBar(true, 'console');
 			}
 			setTimeout(function () {
@@ -42,25 +41,32 @@ var FirebugPentadactyl = function () {
 			fb.closeFirebug(true);
 		},
 		close: function () {
-			if (!fbContentBox.collapsed) {
+			if (fb.chrome.isOpen()) {
 				fb.toggleBar();
 			}
 		},
 		toggle: function () {
 			fb.toggleBar();
 		},
+		previous_tab: function () {
+			fb.chrome.gotoPreviousTab();
+		},
+		next: function (query) {
+			var tab = query[0]['-tab'] || query[0]['-T'];
+			return (tab ? fb.chrome.switchToPanel(fb.currentContext, tab) : fb.chrome.gotoSiblingTab(!tab));
+		},
 		console_run: function () {
-			if (!fbContentBox.collapsed) {
+			if (fb.chrome.isOpen()) {
 				fbCommandLine.enter(fb.currentContext);
 			}
 		},
 		console_clear: function () {
-			if (!fbContentBox.collapsed) {
+			if (fb.chrome.isOpen()) {
 				fb.Console.clear();
 			}
 		},
 		console_focus: function () {
-			if (fbContentBox.collapsed) {
+			if (!fb.chrome.isOpen()) {
 				this.open();
 			}
 			fb.chrome.switchToPanel(fb.currentContext, "console");
@@ -79,7 +85,7 @@ var FirebugPentadactyl = function () {
 var fbp = (new FirebugPentadactyl())._initialize();
 
 group.commands.add(['firebug', 'fbp'], 'Control firebug from within pentadactyl.', function (args) {
-	fbp._exec(args);
+	fbp._exec(args, arguments);
 },
 {
 	count: true,
@@ -93,5 +99,16 @@ group.commands.add(['firebug', 'fbp'], 'Control firebug from within pentadactyl.
 			}
 		}
 		context.completions = cmds;
-	}
+	},
+	options: [{
+		names: ["-tab", "-T"],
+		description: "Select Tab",
+		type: commands.OPTION_STRING,
+		completer: function (context) {
+			var array = ['console', 'html', 'dom', 'css', 'net', 'script'];
+			context.completions = array.map(function (item) {
+				return [item, ''];
+			});
+		}
+	}]
 });
