@@ -15,6 +15,8 @@ Available commands
 * `clear`: 'clear console output window'
 * `run`: 'run script that was entered in console editor'
 
+You also may use any combinations of commands (for example `:firebug clear run console`)
+
 
 Installation
 ------------
