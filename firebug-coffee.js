@@ -17,7 +17,8 @@
       "toggle-console": "toggle between one-line and multiline console",
       clear: "clear console output window",
       run: "run script that was entered in console editor",
-      'tab': "focuses the specified firebug tab (console, html, css, script, dom, net, etc)",
+      'tab': "focuses the specified firebug tab (console, html, stylesheet, script, dom, net, etc)",
+      'tab-side': "focuses the specified firebug side tab (css, computed, layout, dom, domSide, watch)",
       '>': "focuses the next firebug tab(right)",
       '<': "focuses the next firebug tab(left)",
       '#': "focuses the prev firebug tab",
@@ -75,6 +76,11 @@
       }
       if (chrome.isOpen()) {
         return chrome.navigate(null, panelName);
+      }
+    },
+    'tab-side': function(panelName) {
+      if (chrome.isOpen()) {
+        return chrome.selectSidePanel(panelName);
       }
     },
     '>': function() {
