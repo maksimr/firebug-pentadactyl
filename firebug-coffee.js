@@ -7,7 +7,7 @@
   cmd = fb.CommandLine;
   firebug = {
     info: {
-      version: '0.1.1',
+      version: '0.1.2',
       open: "open firebug window",
       close: "minimize firebug window",
       toggle: "toggle firebug window",

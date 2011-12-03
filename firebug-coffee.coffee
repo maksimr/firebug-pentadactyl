@@ -11,7 +11,7 @@ cmd = fb.CommandLine
 #firebug object
 firebug = {
   info:
-    version: '0.1.1'
+    version: '0.1.2'
 
     open: "open firebug window"
     close: "minimize firebug window"
