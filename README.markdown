@@ -12,6 +12,7 @@ Available commands
   * `close`: 'minimize firebug window'
   * `toggle`: 'toggle firebug window'
   * `disable`: 'exit from firebug'
+  * `inspect`: 'inspect elements on the page'
 
 * Console actions
   * `console`: 'focuses the firebug console'

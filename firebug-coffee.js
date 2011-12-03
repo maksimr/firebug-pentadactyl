@@ -22,7 +22,8 @@
       '>': "focuses the next firebug tab(right)",
       '<': "focuses the next firebug tab(left)",
       '#': "focuses the prev firebug tab",
-      '/': "search"
+      '/': "search",
+      inspect: "toggle the firebug element inspector"
     },
     open: function() {
       if (!chrome.isOpen()) {
@@ -39,6 +40,12 @@
     },
     disable: function() {
       return fb.closeFirebug(true);
+    },
+    inspect: function() {
+      if (!fb.currentContext) {
+        fb.toggleBar(true);
+      }
+      return fb.Inspector.toggleInspecting(fb.currentContext);
     },
     console: function() {
       var cmEditor, cmLine;

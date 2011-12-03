@@ -31,12 +31,16 @@ firebug = {
     '#': "focuses the prev firebug tab"
 
     '/': "search"
+    inspect: "toggle the firebug element inspector"
 
   #global action with firebug
   open: ()-> fb.toggleBar(true,'console') if not chrome.isOpen()
   close: ()-> fb.toggleBar() if chrome.isOpen()
   toggle: ()-> fb.toggleBar()
   disable: ()-> fb.closeFirebug(true)
+  inspect: ()->
+    fb.toggleBar(true) unless fb.currentContext
+    fb.Inspector.toggleInspecting(fb.currentContext)
 
   #console
   console: ()->
