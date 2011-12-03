@@ -7,15 +7,34 @@ pentadactyl's console
 Available commands
 ------------------
 
-* `open`: 'open firebug window'
-* `close`: 'minimize firebug window'
-* `toggle`: 'toggle firebug window'
-* `disable`: 'exit from firebug'
-* `console`: 'open console and set focus'
-* `clear`: 'clear console output window'
-* `run`: 'run script that was entered in console editor'
+* Global actions
+  * `open`: 'open firebug window'
+  * `close`: 'minimize firebug window'
+  * `toggle`: 'toggle firebug window'
+  * `disable`: 'exit from firebug'
 
-You also may use any combinations of commands (for example `:firebug clear run console`)
+* Console actions
+  * `console`: 'focuses the firebug console'
+  * `multiline`: 'open the multiline firebug console editor'
+  * `toggle-console`: 'toggle between the one-line and multiline firebug console editor'
+  * `clear`: 'clear console output window'
+  * `run`: 'run script that was entered in console editor'
+
+* Navigation
+  * `tab`: 'focuses the specified firebug tab (console, html, css, script, dom, net, etc)'
+  * `>`: 'focuses the next right firebug tab'
+  * `<`: 'focuses the next left firebug tab'
+  * `#`: 'focuses the prev firebug tab'
+
+You also may use any combinations of commands:
+
+```vim
+  "examples
+  :firebug clear run console
+  :firebug tab html
+  :firebug tab console run toggle-console
+```
+
 
 
 Installation
@@ -39,4 +58,4 @@ Example configuration .pentadactylrc
   set fbliverun
 ```
 
-(version: 0.1.1) maksimr
+(version: 0.1.2) maksimr
