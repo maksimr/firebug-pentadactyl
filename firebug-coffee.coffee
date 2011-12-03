@@ -5,6 +5,8 @@
 "use strict"
 
 fb = Firebug
+chrome = fb.chrome
+cmd = fb.CommandLine
 
 #firebug object
 firebug = {
@@ -27,32 +29,39 @@ firebug = {
     '<': "focuses the next firebug tab(left)"
     '#': "focuses the prev firebug tab"
 
+    '/': "search"
+
   #global action with firebug
-  open: ()-> fb.toggleBar(true,'console') if not fb.chrome.isOpen()
-  close: ()-> fb.toggleBar() if fb.chrome.isOpen()
+  open: ()-> fb.toggleBar(true,'console') if not chrome.isOpen()
+  close: ()-> fb.toggleBar() if chrome.isOpen()
   toggle: ()-> fb.toggleBar()
   disable: ()-> fb.closeFirebug(true)
 
   #console
   console: ()->
-    @open() if not fb.chrome.isOpen()
-    fb.chrome.switchToPanel(fb.currentContext, "console")
-    cmLine = fb.CommandLine.getSingleRowCommandLine()
-    cmEditor = fb.CommandLine.getCommandEditor()
+    @open() if not chrome.isOpen()
+    chrome.switchToPanel(fb.currentContext, "console")
+    cmLine = cmd.getSingleRowCommandLine()
+    cmEditor = cmd.getCommandEditor()
 
     (if fb.commandEditor then cmEditor else cmLine).select()
-  multiline: ()-> fb.CommandLine.toggleMultiLine(true) if fb.chrome.isOpen()
-  "toggle-console": () -> fb.CommandLine.toggleMultiLine() if fb.chrome.isOpen()
+  multiline: ()-> cmd.toggleMultiLine(true) if chrome.isOpen()
+  "toggle-console": () -> cmd.toggleMultiLine() if chrome.isOpen()
 
   #action with console editor
-  clear: ()-> fb.Console.clear() if fb.chrome.isOpen()
-  run: () -> fb.CommandLine.enter(fb.currentContext) if fb.chrome.isOpen()
+  clear: ()-> fb.Console.clear() if chrome.isOpen()
+  run: () -> cmd.enter(fb.currentContext) if chrome.isOpen()
 
   #navigation
-  'tab': (panelName = "console") -> fb.chrome.navigate(null,panelName) if fb.chrome.isOpen()
-  '>': () -> fb.chrome.gotoSiblingTab(true) if fb.chrome.isOpen()
-  '<': () -> fb.chrome.gotoSiblingTab() if fb.chrome.isOpen()
-  '#': () -> fb.chrome.gotoPreviousTab() if fb.chrome.isOpen()
+  'tab': (panelName = "console") -> chrome.navigate(null,panelName) if chrome.isOpen()
+  '>': () -> chrome.gotoSiblingTab(true) if chrome.isOpen()
+  '<': () -> chrome.gotoSiblingTab() if chrome.isOpen()
+  '#': () -> chrome.gotoPreviousTab() if chrome.isOpen()
+  #search
+  '/': (text...) ->
+    if chrome.isOpen()
+      fb.Search.focus fb.currentContext
+      fb.Search.search(text.join(' '), fb.currentContext)
 }
 
 #declare in pentadactyl
@@ -64,5 +73,5 @@ group.commands.add ['firebug', 'fbpc'], "firebug-pentadactyl (version #{firebug.
 
 group.options.add ["fbliverun"], "run script on blur firebug console","boolean",false,
   setter: (value)->
-    if value then group.events.listen(fb.CommandLine.getCommandEditor(),'blur', firebug.run,true)
-    else if not value then group.events.unlisten(fb.CommandLine.getCommandEditor(),'blur', firebug.run,true)
+    if value then group.events.listen(cmd.getCommandEditor(),'blur', firebug.run,true)
+    else if not value then group.events.unlisten(cmd.getCommandEditor(),'blur', firebug.run,true)

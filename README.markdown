@@ -25,6 +25,7 @@ Available commands
   * `>`: 'focuses the next right firebug tab'
   * `<`: 'focuses the next left firebug tab'
   * `#`: 'focuses the prev firebug tab'
+  * `/`: 'search'
 
 You also may use any combinations of commands:
 
