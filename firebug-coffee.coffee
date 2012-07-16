@@ -1,17 +1,18 @@
 #firebug-pentadactyl
-#version: 0.1.2
+#version: 0.1.3
 #author: Maksim Ryzhikov
 
 "use strict"
 
-fb = Firebug
+global = window
+fb = global.Firebug
 chrome = fb.chrome
 cmd = fb.CommandLine
 
 #firebug object
 firebug = {
   info:
-    version: '0.1.2'
+    version: '0.1.3'
 
     open: "open firebug window"
     close: "minimize firebug window"
@@ -49,7 +50,11 @@ firebug = {
     cmLine = cmd.getSingleRowCommandLine()
     cmEditor = cmd.getCommandEditor()
 
-    (if fb.commandEditor then cmEditor else cmLine).select()
+    if fb.commandEditor
+      cmEditor.focus()
+    else
+      cmLine.select()
+
   multiline: ()-> cmd.toggleMultiLine(true) if chrome.isOpen()
   "toggle-console": () -> cmd.toggleMultiLine() if chrome.isOpen()
 
@@ -68,10 +73,20 @@ firebug = {
     if chrome.isOpen()
       fb.Search.focus fb.currentContext
       fb.Search.search(text.join(' '), fb.currentContext)
+  #initialize
+  _initialize: () ->
+    fb = global.Firebug
+    chrome = fb.chrome
+    cmd = fb.CommandLine
+
 }
 
 #declare in pentadactyl
 group.commands.add ['firebug', 'fbpc'], "firebug-pentadactyl (version #{firebug.info.version})", (args) ->
+  #Firebug may load after pentadactyl
+  #I think so.
+  unless chrome then firebug._initialize()
+
   firebug[command].apply firebug, args[index+1..] for command, index in args when firebug[command]
 ,{
   completer: (context)-> context.completions = ([name,firebug.info[name]] for name of firebug when name isnt 'info' or name.indexOf('_'))
@@ -79,5 +94,9 @@ group.commands.add ['firebug', 'fbpc'], "firebug-pentadactyl (version #{firebug.
 
 group.options.add ["fbliverun"], "run script on blur firebug console","boolean",false,
   setter: (value)->
-    if value then group.events.listen(cmd.getCommandEditor(),'blur', firebug.run,true)
-    else if not value then group.events.unlisten(cmd.getCommandEditor(),'blur', firebug.run,true)
+    unless cmd then firebug._initialize()
+
+    cmEditor = cmd.getCommandEditor()
+
+    if value then cmEditor.editor.addEventListener('blur', firebug.run)
+    else if not value then cmEditor.editor.removeEventListener('blur', firebug.run)

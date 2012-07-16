@@ -61,4 +61,4 @@ Example configuration .pentadactylrc
   set fbliverun
 ```
 
-(version: 0.1.2) maksimr
+(version: 0.1.3) maksimr
