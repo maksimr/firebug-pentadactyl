@@ -64,7 +64,11 @@
       cmLine = cmd.getSingleRowCommandLine();
       cmEditor = cmd.getCommandEditor();
       if (fb.commandEditor) {
-        return cmEditor.focus();
+        if (cmEditor.focus) {
+          return cmEditor.focus();
+        } else {
+          return cmEditor.select();
+        }
       } else {
         return cmLine.select();
       }

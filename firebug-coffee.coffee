@@ -51,7 +51,7 @@ firebug = {
     cmEditor = cmd.getCommandEditor()
 
     if fb.commandEditor
-      cmEditor.focus()
+      if cmEditor.focus then cmEditor.focus() else cmEditor.select()
     else
       cmLine.select()
 
