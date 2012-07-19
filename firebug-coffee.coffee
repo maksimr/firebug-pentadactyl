@@ -1,6 +1,7 @@
 #firebug-pentadactyl
 #version: 0.1.3
 #author: Maksim Ryzhikov
+#Set ‘extensions.firebug.enableOrion’ preference (in about:config) to false for highlighting off
 
 "use strict"
 
