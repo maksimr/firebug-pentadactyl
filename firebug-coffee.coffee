@@ -34,6 +34,7 @@ firebug = {
 
     '/': "search"
     inspect: "toggle the firebug element inspector"
+    behave: "use Behave.js for console (like auto-pairs)"
 
   #global action with firebug
   open: ()-> fb.toggleBar(true,'console') if not chrome.isOpen()
@@ -43,6 +44,11 @@ firebug = {
   inspect: ()->
     fb.toggleBar(true) unless fb.currentContext
     fb.Inspector.toggleInspecting(fb.currentContext)
+  behave: ()->
+    if !@_editor && cmd && dactyl.plugins && dactyl.plugins.Behave
+      @_editor = new dactyl.plugins.Behave({
+        textarea: cmd.getCommandEditor().editor.textBox
+      })
 
   #console
   console: ()->
@@ -80,6 +86,7 @@ firebug = {
     chrome = fb.chrome
     cmd = fb.CommandLine
 
+    @behave()
 }
 
 #declare in pentadactyl
