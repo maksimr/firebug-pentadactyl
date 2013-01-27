@@ -45,6 +45,11 @@ firebug = {
     fb.toggleBar(true) unless fb.currentContext
     fb.Inspector.toggleInspecting(fb.currentContext)
   behave: ()->
+    if @_editor
+      @_editor.destroy()
+      @_editor = null
+      return
+
     if !@_editor && cmd && dactyl.plugins && dactyl.plugins.Behave
       @_editor = new dactyl.plugins.Behave({
         textarea: cmd.getCommandEditor().editor.textBox

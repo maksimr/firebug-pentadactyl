@@ -57,6 +57,11 @@
       return fb.Inspector.toggleInspecting(fb.currentContext);
     },
     behave: function() {
+      if (this._editor) {
+        this._editor.destroy();
+        this._editor = null;
+        return;
+      }
       if (!this._editor && cmd && dactyl.plugins && dactyl.plugins.Behave) {
         return this._editor = new dactyl.plugins.Behave({
           textarea: cmd.getCommandEditor().editor.textBox
