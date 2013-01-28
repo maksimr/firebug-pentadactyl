@@ -13,6 +13,7 @@ Available commands
   * `toggle`: 'toggle firebug window'
   * `disable`: 'exit from firebug'
   * `inspect`: 'inspect elements on the page'
+  *  `behave`: 'add Behave.js to firebug console (like auto-pairs)'
 
 * Console actions
   * `console`: 'focuses the firebug console'
